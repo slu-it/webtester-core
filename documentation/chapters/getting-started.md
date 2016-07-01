@@ -296,7 +296,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
  
-import info.novatec.testit.webtester.utils.Waits;
+import info.novatec.testit.webtester.waiting.Wait;
 import info.novatec.testit.webtester.api.browser.Browser;
 import info.novatec.testit.webtester.browser.factories.FirefoxFactory;
 import info.novatec.testit.webtester.junit.annotations.ConfigurationValue;
@@ -333,7 +333,7 @@ public class TwitterTest {
         String tweetMessage = "It is " + new Date();
         TwitterHome home = twitterLogin.login(username, password).tweet(tweetMessage);
  
-        Waits.waitSeconds(1); // AJAX actions take some time to be performed
+        Wait.exactly(1, TimeUnit.SECOND); // AJAX actions take some time to be performed
         assertEquals(tweetMessage, home.getMessageOfLatestTweet());
  
     }

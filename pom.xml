@@ -63,6 +63,7 @@
 
 		<version.junit>4.12</version.junit>
 		<version.hamcrest>1.3</version.hamcrest>
+		<version.assertj>2.3.0</version.assertj>
 		<version.mockito>1.10.19</version.mockito>
 		<version.checkstyle>6.9</version.checkstyle>
 
@@ -75,6 +76,8 @@
 		<version.commons.lang>2.6</version.commons.lang>
 		<version.commons.io>2.4</version.commons.io>
 		<version.commons.logging>1.2</version.commons.logging>
+
+		<version.lombok>1.16.8</version.lombok>
 
 		<!-- plugin versions -->
 
@@ -121,6 +124,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<!-- Logback used for logging in tests. Is scoped as a test dependency
 				in order to not collide with whatever the actual customer project is using. -->
 			<groupId>ch.qos.logback</groupId>
@@ -161,6 +169,12 @@
 				<groupId>commons-logging</groupId>
 				<artifactId>commons-logging</artifactId>
 				<version>${version.commons.logging}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${version.lombok}</version>
 			</dependency>
 
 			<!-- Selenium -->
@@ -214,6 +228,11 @@
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-core</artifactId>
 				<version>${version.hamcrest}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${version.assertj}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mockito</groupId>

@@ -2,19 +2,19 @@ package info.novatec.testit.webtester.utils;
 
 import java.util.concurrent.TimeUnit;
 
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 
+import lombok.extern.slf4j.Slf4j;
+
 import info.novatec.testit.webtester.api.browser.Browser;
 import info.novatec.testit.webtester.api.config.Configuration;
-import info.novatec.testit.webtester.eventsystem.EventSystem;
-import info.novatec.testit.webtester.eventsystem.events.browser.ExceptionEvent;
 import info.novatec.testit.webtester.pageobjects.PageObject;
+import info.novatec.testit.webtester.waiting.TimeoutException;
+import info.novatec.testit.webtester.waiting.Wait;
+import info.novatec.testit.webtester.waiting.WaitConfig;
 
 
 /**
@@ -23,13 +23,13 @@ import info.novatec.testit.webtester.pageobjects.PageObject;
  * page object waits'.
  *
  * @since 0.9.6
+ * @deprecated this class will be removed in v1.3 - use {@link Wait} instead.
  */
+@Slf4j
+@Deprecated
 public final class Waits {
 
-    private static final Logger logger = LoggerFactory.getLogger(Waits.class);
-
-    private static final String TIMEOUT_MESSAGE = "condition not met within the given timeout";
-    private static final long DEFAULT_INTERVAL = 100L;
+    // TODO: remove in v1.3
 
     /**
      * Waits the given duration in seconds.
@@ -38,7 +38,7 @@ public final class Waits {
      * @since 0.9.6
      */
     public static void waitSeconds(long duration) {
-        wait(duration, TimeUnit.SECONDS);
+        Wait.exactly(duration, TimeUnit.SECONDS);
     }
 
     /**
@@ -48,7 +48,7 @@ public final class Waits {
      * @since 0.9.6
      */
     public static void waitMilliseconds(long duration) {
-        wait(duration, TimeUnit.MILLISECONDS);
+        Wait.exactly(duration, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -59,11 +59,7 @@ public final class Waits {
      * @since 0.9.8 changed method parameter order
      */
     public static void wait(long duration, TimeUnit timeUnit) {
-        try {
-            Thread.sleep(timeUnit.toMillis(duration));
-        } catch (InterruptedException e) {
-            logger.debug("wait was interrupted", e);
-        }
+        Wait.exactly(duration, timeUnit);
     }
 
     /**
@@ -85,7 +81,7 @@ public final class Waits {
      * @since 0.9.8
      */
     public static void waitMillisecondsUntil(long timeout, Supplier<Boolean> condition) {
-        waitUntil(timeout, TimeUnit.MILLISECONDS, condition);
+        Wait.withTimeoutOf(timeout, TimeUnit.MILLISECONDS).until(condition);
     }
 
     /**
@@ -106,7 +102,7 @@ public final class Waits {
      * @since 0.9.8
      */
     public static void waitSecondsUntil(long timeout, Supplier<Boolean> condition) {
-        waitUntil(timeout, TimeUnit.SECONDS, condition);
+        Wait.withTimeoutOf(timeout, TimeUnit.SECONDS).until(condition);
     }
 
     /**
@@ -130,7 +126,7 @@ public final class Waits {
      * @since 0.9.8
      */
     public static void waitUntil(long timeout, TimeUnit unit, Supplier<Boolean> condition) {
-        waitUntil(timeout, unit, DEFAULT_INTERVAL, condition);
+        Wait.withTimeoutOf(timeout, unit).until(condition);
     }
 
     /**
@@ -156,33 +152,7 @@ public final class Waits {
      */
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public static void waitUntil(long timeout, TimeUnit unit, long interval, Supplier<Boolean> condition) {
-
-        long effectiveTimeout = unit.toMillis(timeout);
-        long start = now();
-
-        boolean conditionMet = false;
-        RuntimeException lastException = null;
-
-        do {
-            try {
-                conditionMet = condition.get();
-                logger.trace("condition '{}' met: {}", condition, conditionMet);
-                waitMilliseconds(interval);
-            } catch (RuntimeException e) {
-                lastException = e;
-            }
-        } while (!conditionMet && timeSince(start) < effectiveTimeout);
-
-        if (!conditionMet) {
-            logger.debug("condition not met: {}", condition);
-            if (lastException != null) {
-                throw new TimeoutException(TIMEOUT_MESSAGE, lastException);
-            }
-            throw new TimeoutException(TIMEOUT_MESSAGE);
-        } else {
-            logger.debug("condition met: {}", condition);
-        }
-
+        Wait.withTimeoutOf(new WaitConfig().setTimeout(timeout).setTimeUnit(unit).setInterval(interval)).until(condition);
     }
 
     /**
@@ -236,7 +206,8 @@ public final class Waits {
      * @since 0.9.8
      */
     public static <T extends PageObject> T waitUntil(T pageObject, Predicate<? super T> condition) {
-        return waitSecondsUntil(getWaitTimeout(pageObject), pageObject, condition);
+        Wait.until(pageObject).has(condition);
+        return pageObject;
     }
 
     /**
@@ -263,7 +234,8 @@ public final class Waits {
      */
     public static <T extends PageObject> T waitMillisecondsUntil(long timeout, T pageObject,
         Predicate<? super T> condition) {
-        return waitUntil(timeout, TimeUnit.MILLISECONDS, pageObject, condition);
+        Wait.withTimeoutOf(timeout, TimeUnit.MILLISECONDS).until(pageObject).has(condition);
+        return pageObject;
     }
 
     /**
@@ -288,7 +260,8 @@ public final class Waits {
      * @since 0.9.8
      */
     public static <T extends PageObject> T waitSecondsUntil(long timeout, T pageObject, Predicate<? super T> condition) {
-        return waitUntil(timeout, TimeUnit.SECONDS, pageObject, condition);
+        Wait.withTimeoutOf(timeout, TimeUnit.SECONDS).until(pageObject).has(condition);
+        return pageObject;
     }
 
     /**
@@ -316,7 +289,8 @@ public final class Waits {
      */
     public static <T extends PageObject> T waitUntil(long timeout, TimeUnit unit, T pageObject,
         Predicate<? super T> condition) {
-        return waitUntil(timeout, unit, getWaitInterval(pageObject), pageObject, condition);
+        Wait.withTimeoutOf(timeout, unit).until(pageObject).has(condition);
+        return pageObject;
     }
 
     /**
@@ -346,41 +320,10 @@ public final class Waits {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     public static <T extends PageObject> T waitUntil(long timeout, TimeUnit unit, long interval, final T pageObject,
         final Predicate<? super T> condition) {
-        try {
-            waitUntil(timeout, unit, interval, new Supplier<Boolean>() {
-
-                @Override
-                public Boolean get() {
-                    return condition.apply(pageObject);
-                }
-
-                @Override
-                public String toString() {
-                    return condition.toString();
-                }
-
-            });
-        } catch (RuntimeException e) {
-            EventSystem.fireEvent(new ExceptionEvent(pageObject, e));
-            throw e;
-        }
+        Wait.withTimeoutOf(new WaitConfig().setTimeout(timeout).setTimeUnit(unit).setInterval(interval))
+            .until(pageObject)
+            .has(condition);
         return pageObject;
-    }
-
-    private static long timeSince(long start) {
-        return now() - start;
-    }
-
-    private static long now() {
-        return System.currentTimeMillis();
-    }
-
-    private static int getWaitTimeout(PageObject pageObject) {
-        return pageObject.getBrowser().getConfiguration().getWaitTimeout();
-    }
-
-    private static long getWaitInterval(PageObject pageObject) {
-        return pageObject.getBrowser().getConfiguration().getWaitInterval();
     }
 
     private Waits() {

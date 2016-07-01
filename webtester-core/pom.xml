@@ -36,6 +36,14 @@
 		</dependency>
 
 		<dependency>
+			<!-- Used for data transport classes and other POJOS. -->
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<!-- Selenium dependency used to have access to the Selenium API. -->
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>

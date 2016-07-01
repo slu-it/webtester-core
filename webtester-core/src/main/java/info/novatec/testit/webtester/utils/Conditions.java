@@ -31,11 +31,11 @@ import info.novatec.testit.webtester.utils.conditions.VisibleTextEquals;
 import info.novatec.testit.webtester.utils.conditions.syntax.Has;
 import info.novatec.testit.webtester.utils.conditions.syntax.Is;
 import info.novatec.testit.webtester.utils.conditions.syntax.Not;
+import info.novatec.testit.webtester.waiting.Wait;
 
 
 /**
- * Utility class used to produce all kinds of predicate conditions to be used by
- * the {@link Waits} API.
+ * Utility class used to produce all kinds of predicate conditions to be used by the {@link Wait} API.
  *
  * @since 0.9.9
  */

@@ -1,12 +1,10 @@
 package info.novatec.testit.webtester.utils;
 
-import static info.novatec.testit.webtester.utils.Conditions.is;
 import static info.novatec.testit.webtester.utils.Conditions.visible;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 
@@ -18,6 +16,8 @@ import info.novatec.testit.webtester.eventsystem.events.pageobject.ClickedEvent;
 import info.novatec.testit.webtester.eventsystem.events.pageobject.ContextClickedEvent;
 import info.novatec.testit.webtester.eventsystem.events.pageobject.DoubleClickedEvent;
 import info.novatec.testit.webtester.pageobjects.PageObject;
+import info.novatec.testit.webtester.waiting.TimeoutException;
+import info.novatec.testit.webtester.waiting.Wait;
 
 
 /**
@@ -174,7 +174,7 @@ public final class Mouse {
 
             @Override
             public void execute(PageObject po) {
-                Waits.waitUntil(po, is(visible()));
+                Wait.until(po).is(visible());
                 startActionSequence(po).moveToElement(po.getWebElement()).perform();
             }
 

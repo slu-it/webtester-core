@@ -8,7 +8,7 @@ import java.util.Set;
 import org.openqa.selenium.support.Color;
 
 import info.novatec.testit.webtester.api.exceptions.config.SetNullValuesException;
-import info.novatec.testit.webtester.utils.Waits;
+import info.novatec.testit.webtester.waiting.Wait;
 
 
 /**
@@ -199,7 +199,7 @@ public interface Configuration {
 
     /**
      * Returns the default maximum number of seconds to wait when executing wait
-     * operations on page objects using the {@link Waits} API.
+     * operations on page objects using the {@link Wait} API.
      *
      * @return the number of seconds
      * @since 0.9.7
@@ -208,7 +208,7 @@ public interface Configuration {
 
     /**
      * Sets the default maximum number of seconds to wait when executing wait
-     * operations on page objects using the {@link Waits} API.
+     * operations on page objects using the {@link Wait} API.
      *
      * @param waitTimeout timeout in seconds
      * @return the same configuration for fluent API
@@ -218,7 +218,7 @@ public interface Configuration {
 
     /**
      * Returns the default number of milliseconds to wait between checks when
-     * executing wait operations on page objects using the {@link Waits} API.
+     * executing wait operations on page objects using the {@link Wait} API.
      *
      * @return the number of milliseconds
      * @since 0.9.7
@@ -227,7 +227,7 @@ public interface Configuration {
 
     /**
      * Sets the default number of milliseconds to wait between checks when
-     * executing wait operations on page objects using the {@link Waits} API.
+     * executing wait operations on page objects using the {@link Wait} API.
      *
      * @param waitInterval the interval in milliseconds
      * @return the same configuration for fluent API

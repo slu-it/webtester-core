@@ -1,6 +1,5 @@
 package info.novatec.testit.webtester.internal.pageobjects;
 
-import static info.novatec.testit.webtester.utils.Conditions.is;
 import static info.novatec.testit.webtester.utils.Conditions.visible;
 
 import java.lang.reflect.Constructor;
@@ -13,7 +12,6 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.FindBys;
@@ -42,7 +40,8 @@ import info.novatec.testit.webtester.eventsystem.events.browser.ExceptionEvent;
 import info.novatec.testit.webtester.internal.ReflectionUtils;
 import info.novatec.testit.webtester.pageobjects.PageObject;
 import info.novatec.testit.webtester.utils.Identifications;
-import info.novatec.testit.webtester.utils.Waits;
+import info.novatec.testit.webtester.waiting.TimeoutException;
+import info.novatec.testit.webtester.waiting.Wait;
 
 
 /**
@@ -301,7 +300,7 @@ public final class DefaultPageObjectFactory implements PageObjectFactory {
 
     private <T extends PageObject> void waitOnPageObjectsVisibility(T pageInstance, Field field) {
         PageObject pageObject = getPageObjectFromOf(field, pageInstance);
-        Waits.waitUntil(pageObject, is(visible()));
+        Wait.until(pageObject).is(visible());
     }
 
     private <T extends PageObject> void tryToWaitOnPageObjectListVisibility(T pageInstance, Field field) {
@@ -320,7 +319,7 @@ public final class DefaultPageObjectFactory implements PageObjectFactory {
         int actual = 0;
         for (PageObject pageObject : list) {
             try {
-                Waits.waitUntil(pageObject, is(visible()));
+                Wait.until(pageObject).is(visible());
                 actual++;
             } catch (TimeoutException e) {
                 // ignore timeout for present but not visible objects
