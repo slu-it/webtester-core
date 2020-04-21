@@ -22,9 +22,6 @@ It is the product of years of consulting experience in various projects and aims
 ### Other Versions
 This repository contains the Java 6/7 branch of WebTester. For the Java 8 version of WebTester take a look [here](https://github.com/testIT-WebTester/webtester2-core).
 
-### Get in touch
-You can contact us via [e-mail](mailto:webtester@novatec-gmbh.de) or create an [issue](https://github.com/testIT-WebTester/webtester-core/issues).
-
 ### Documentation
 The [user documentation](documentation/README.md) is part of the repository and provides in-depth documentation on all the features. If you have further questions please get in touch with us.
 
